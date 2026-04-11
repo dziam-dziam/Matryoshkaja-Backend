@@ -8,7 +8,6 @@ import org.hibernate.Hibernate;
 @Entity
 @Builder
 @Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "photos")

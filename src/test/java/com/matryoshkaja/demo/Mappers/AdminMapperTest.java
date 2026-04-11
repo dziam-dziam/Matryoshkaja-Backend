@@ -18,24 +18,24 @@ class AdminMapperTest {
     }
 
     @Test
-    void shouldMapAdminCreateDtoToEntity(){
+    void shouldMapCreateDtoToEntity(){
         //given
         AdminCreateDto dto = AdminCreateDto.builder()
                 .email("email@test.com")
                 .password("Password123!")
                 .build();
         //when
-        Admin entity = adminMapper.mapAdminCreateDtoToEntity(dto);
+        Admin entity = adminMapper.mapCreateDtoToEntity(dto);
         //then
         assertNotNull(entity);
         assertEquals(entity.getEmail(),dto.getEmail());
     }
 
     @Test
-    void shouldNotMapAdminCreateDtoToEntityWhenDtoIsNull(){
+    void shouldNotMapCreateDtoToEntityWhenDtoIsNull(){
         //given null & when & then
         assertThrows(IllegalArgumentException.class, () -> {
-            adminMapper.mapAdminCreateDtoToEntity(null);
+            adminMapper.mapCreateDtoToEntity(null);
         });
     }
 
@@ -47,7 +47,7 @@ class AdminMapperTest {
                 .password("Password123!")
                 .build();
         //when
-        Admin admin = adminMapper.mapAdminCreateDtoToEntity(dto);
+        Admin admin = adminMapper.mapCreateDtoToEntity(dto);
         //then
         assertNull(admin.getId());
         assertNull(admin.getHashedPassword());
@@ -61,20 +61,20 @@ class AdminMapperTest {
                 .password("Test12!")
                 .build();
         //when
-        Admin admin = adminMapper.mapAdminCreateDtoToEntity(dto);
+        Admin admin = adminMapper.mapCreateDtoToEntity(dto);
         //then
         assertNotSame(dto,admin);
     }
 
     @Test
-    void shouldMapEntityToAdminResponseDto(){
+    void shouldMapEntityToResponseDto(){
         //given
         Admin entity = Admin.builder()
                 .id(1L)
                 .email("test@test.com")
                 .build();
         //when
-        AdminResponseDto dto = adminMapper.mapEntityToAdminResponseDto(entity);
+        AdminResponseDto dto = adminMapper.mapEntityToResponseDto(entity);
         //then
         assertNotNull(dto);
         assertEquals(entity.getId(), dto.getId());
@@ -85,7 +85,7 @@ class AdminMapperTest {
     void shouldNotMapEntityToAdminResponseDtoWhenEntityIsNull(){
         //given null & when & then
         assertThrows(IllegalArgumentException.class, () ->{
-            adminMapper.mapEntityToAdminResponseDto(null);
+            adminMapper.mapEntityToResponseDto(null);
         });
     }
 

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Builder
 @AllArgsConstructor
 public class AdminMapper {
-    public Admin mapAdminCreateDtoToEntity(AdminCreateDto dto){
+    public Admin mapCreateDtoToEntity(AdminCreateDto dto){
         if (dto == null){
             throw new IllegalArgumentException("Dto cannot be null");
         }
@@ -20,7 +20,7 @@ public class AdminMapper {
                 .build();
     }
 
-    public AdminResponseDto mapEntityToAdminResponseDto(Admin entity){
+    public AdminResponseDto mapEntityToResponseDto(Admin entity){
         if (entity == null){
             throw new IllegalArgumentException("Entity cannot be null");
         }
