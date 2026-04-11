@@ -19,4 +19,8 @@ public class StorageService {
     public String upload(MultipartFile file, String key) {
         return "https://fake-storage.com/" + key;
     }
+
+    public void delete(String key){
+
+    }
 }
