@@ -3,16 +3,14 @@ package com.matryoshkaja.demo.Entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.Hibernate;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "admins")
 @Builder
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Admin {
@@ -27,9 +25,6 @@ public class Admin {
 
     @Column(name = "hashed_password", nullable = false)
     private String hashedPassword;
-
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
 
     @Override
     public final boolean equals(Object object) {
