@@ -18,6 +18,9 @@ public class UploadPhotoService {
     private final PhotoMapper photoMapper;
 
     public PhotoResponseDto uploadPhoto(MultipartFile file){
+        if (file == null || file.isEmpty()){
+            throw new IllegalArgumentException("File input cannot be null or empty");
+        }
         String key = storageService.generateKey(file.getOriginalFilename());
 
         String url = storageService.upload(file, key);
