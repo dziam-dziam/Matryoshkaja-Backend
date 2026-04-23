@@ -1,5 +1,6 @@
 package com.matryoshkaja.demo.Entities;
 
+import com.matryoshkaja.demo.Enums.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -17,6 +18,11 @@ public class Admin {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    //Role field has been added 14.04.2026, 10:00
+    @Enumerated(EnumType.STRING)
+    @Column(name="role", nullable = false)
+    private Role role;
 
     @Column(name = "email", nullable = false, unique = true)
     @NotBlank

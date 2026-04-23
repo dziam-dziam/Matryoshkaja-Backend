@@ -3,6 +3,8 @@ package com.matryoshkaja.demo.Services.AdminServices;
 import com.matryoshkaja.demo.Dtos.AdminDtos.AdminCreateDto;
 import com.matryoshkaja.demo.Dtos.AdminDtos.AdminResponseDto;
 import com.matryoshkaja.demo.Entities.Admin;
+import com.matryoshkaja.demo.Enums.Role;
+import com.matryoshkaja.demo.Exceptions.EmailAlreadyExistsException;
 import com.matryoshkaja.demo.Mappers.AdminMapper;
 import com.matryoshkaja.demo.Repositories.AdminRepository;
 import com.matryoshkaja.demo.Security.PasswordService;
@@ -54,6 +56,7 @@ class CreateAdminServiceTest {
                 .email("test@gmail.com")
                 .build();
 
+        when(adminRepository.existsByEmail(anyString())).thenReturn(false);
         when(adminMapper.mapCreateDtoToEntity(adminCreateDto)).thenReturn(mappedAdmin);
         when(passwordService.hash(adminCreateDto.getPassword())).thenReturn("hashed");
         when(adminRepository.save(mappedAdmin)).thenReturn(savedAdmin);
@@ -62,6 +65,7 @@ class CreateAdminServiceTest {
         AdminResponseDto result = createAdminService.createAdmin(adminCreateDto);
         //then
         assertNotNull(result);
+        assertEquals(Role.ADMIN, mappedAdmin.getRole());
         assertEquals(adminResponseDto.getId(),result.getId());
         assertEquals(adminResponseDto.getEmail(),result.getEmail());
 
@@ -101,6 +105,7 @@ class CreateAdminServiceTest {
                 .email("Jacek12!")
                 .build();
 
+        when(adminRepository.existsByEmail(anyString())).thenReturn(false);
         when(adminMapper.mapCreateDtoToEntity(dto)).thenReturn(mappedAdmin);
         when(passwordService.hash(dto.getPassword())).thenReturn("hashed");
         when(adminRepository.save(mappedAdmin)).thenReturn(saved);
@@ -127,6 +132,25 @@ class CreateAdminServiceTest {
         assertThrows(IllegalArgumentException.class, () -> createAdminService.createAdmin(dto));
 
         verify(adminRepository, never()).save(any());
+    }
+
+    @Test
+    void shouldThrowWhenEmailAlreadyExists() {
+        // given
+        AdminCreateDto dto = AdminCreateDto.builder()
+                .email("test@gmail.com")
+                .password("Test123!")
+                .build();
+
+        when(adminRepository.existsByEmail(dto.getEmail())).thenReturn(true);
+
+        // when + then
+        assertThrows(EmailAlreadyExistsException.class,
+                () -> createAdminService.createAdmin(dto));
+
+        verify(adminRepository, never()).save(any());
+        verify(passwordService, never()).hash(any());
+        verify(adminMapper, never()).mapCreateDtoToEntity(any(AdminCreateDto.class));
     }
 
 }

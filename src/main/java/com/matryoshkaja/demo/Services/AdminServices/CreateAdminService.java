@@ -3,6 +3,8 @@ package com.matryoshkaja.demo.Services.AdminServices;
 import com.matryoshkaja.demo.Dtos.AdminDtos.AdminCreateDto;
 import com.matryoshkaja.demo.Dtos.AdminDtos.AdminResponseDto;
 import com.matryoshkaja.demo.Entities.Admin;
+import com.matryoshkaja.demo.Enums.Role;
+import com.matryoshkaja.demo.Exceptions.EmailAlreadyExistsException;
 import com.matryoshkaja.demo.Mappers.AdminMapper;
 import com.matryoshkaja.demo.Repositories.AdminRepository;
 import com.matryoshkaja.demo.Security.PasswordService;
@@ -18,7 +20,12 @@ public class CreateAdminService {
 
     public AdminResponseDto createAdmin(AdminCreateDto dto){
         if (dto == null) throw new IllegalArgumentException("CreateDto cannot be null");
+        if (adminRepository.existsByEmail(dto.getEmail())){
+            throw new EmailAlreadyExistsException(dto.getEmail());
+        }
+
         Admin newAdmin = adminMapper.mapCreateDtoToEntity(dto);
+        newAdmin.setRole(Role.ADMIN);
         String hashedPassword = passwordService.hash(dto.getPassword());
         newAdmin.setHashedPassword(hashedPassword);
 

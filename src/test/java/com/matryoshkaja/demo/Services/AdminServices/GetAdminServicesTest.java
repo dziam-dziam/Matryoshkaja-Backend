@@ -2,6 +2,7 @@ package com.matryoshkaja.demo.Services.AdminServices;
 
 import com.matryoshkaja.demo.Dtos.AdminDtos.AdminResponseDto;
 import com.matryoshkaja.demo.Entities.Admin;
+import com.matryoshkaja.demo.Enums.Role;
 import com.matryoshkaja.demo.Exceptions.AdminNotFoundException;
 import com.matryoshkaja.demo.Mappers.AdminMapper;
 import com.matryoshkaja.demo.Repositories.AdminRepository;
@@ -37,6 +38,7 @@ class GetAdminServicesTest {
                 .id(adminId)
                 .email("test@mail.com")
                 .hashedPassword("hashed")
+                .role(Role.ADMIN)
                 .build();
 
         AdminResponseDto responseDto = AdminResponseDto.builder()
@@ -88,10 +90,12 @@ class GetAdminServicesTest {
                         .id(1L)
                         .hashedPassword("hashed1")
                         .email("test1@gmail.com")
+                        .role(Role.ADMIN)
                         .build(),
                 Admin.builder()
                         .id(2L)
                         .hashedPassword("hashed2")
+                        .role(Role.ADMIN)
                         .email("test2@gmail.com").build()
         );
         List<AdminResponseDto> responseDtos = List.of(
