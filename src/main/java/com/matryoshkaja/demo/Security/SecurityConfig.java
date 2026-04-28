@@ -3,6 +3,7 @@ package com.matryoshkaja.demo.Security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -33,6 +34,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/admins/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/photos", "/photos/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session ->
