@@ -1,7 +1,10 @@
 package com.matryoshkaja.demo.Exceptions;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
@@ -20,6 +23,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AdminNotFoundException.class)
     public ResponseEntity<String> handleAdminNotFound(AdminNotFoundException exception){
         return ResponseEntity.status(404).body(exception.getMessage());
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public String handleBadCredentials() {
+        return "Bad credentials";
     }
 
 }

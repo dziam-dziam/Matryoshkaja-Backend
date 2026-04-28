@@ -2,6 +2,8 @@ package com.matryoshkaja.demo.Controllers;
 
 import com.matryoshkaja.demo.Dtos.PhotoResponseDto;
 import com.matryoshkaja.demo.Exceptions.PhotoNotFoundException;
+import com.matryoshkaja.demo.Security.CustomUserDetailsService;
+import com.matryoshkaja.demo.Security.JwtService;
 import com.matryoshkaja.demo.Services.PhotoServices.DeletePhotoService;
 import com.matryoshkaja.demo.Services.PhotoServices.GetPhotoService;
 import com.matryoshkaja.demo.Services.PhotoServices.UploadPhotoService;
@@ -23,6 +25,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(PhotoController.class)
 class PhotoControllerTest {
+
+    @MockitoBean
+    private JwtService jwtService;
+    @MockitoBean
+    private CustomUserDetailsService customUserDetailsService;
     @Autowired
     private MockMvc mockMvc;
     @MockitoBean

@@ -1,13 +1,16 @@
 package com.matryoshkaja.demo.Controllers;
 
-
 import com.matryoshkaja.demo.Dtos.AdminDtos.AdminResponseDto;
 import com.matryoshkaja.demo.Exceptions.AdminNotFoundException;
+import com.matryoshkaja.demo.Security.CustomUserDetailsService;
+import com.matryoshkaja.demo.Security.JwtService;
 import com.matryoshkaja.demo.Services.AdminServices.CreateAdminService;
 import com.matryoshkaja.demo.Services.AdminServices.GetAdminServices;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -25,6 +28,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(AdminController.class)
 class AdminControllerTest {
 
+    @MockitoBean
+    private JwtService jwtService;
+    @MockitoBean
+    private CustomUserDetailsService customUserDetailsService;
     @Autowired
     private MockMvc mockMvc;
     @MockitoBean
@@ -32,9 +39,14 @@ class AdminControllerTest {
     @MockitoBean
     private GetAdminServices getAdminServices;
 
+    @TestConfiguration
+    @EnableMethodSecurity
+    static class TestSecurityConfig {
+    }
+
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = "ADMIN")
     void shouldCreateAdmin() throws Exception {
         String requestJson = """
             {
@@ -50,7 +62,7 @@ class AdminControllerTest {
 
         when(createAdminService.createAdmin(any())).thenReturn(response);
 
-        mockMvc.perform(post("/admins")
+        mockMvc.perform(post("/admins/create")
                         .contentType("application/json")
                         .content(requestJson)
                         .with(csrf()))
@@ -68,7 +80,7 @@ class AdminControllerTest {
     void shouldReturn400WhenCreateInvalid() throws Exception {
         String requestJson = "{}"; // brak danych
 
-        mockMvc.perform(post("/admins")
+        mockMvc.perform(post("/admins/create")
                         .contentType("application/json")
                         .content(requestJson)
                         .with(csrf()))
@@ -77,7 +89,7 @@ class AdminControllerTest {
 
     @Test
     void shouldReturn403WhenCreateWithoutAuth() throws Exception {
-        mockMvc.perform(post("/admins")
+        mockMvc.perform(post("/admins/create")
                         .contentType("application/json")
                         .content("{}"))
                 .andExpect(status().isForbidden());
@@ -92,7 +104,7 @@ class AdminControllerTest {
 
         when(getAdminServices.getAdmin(1L)).thenReturn(dto);
 
-        mockMvc.perform(get("/admins/1"))
+        mockMvc.perform(get("/admins/get/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith("application/json"))
                 .andExpect(jsonPath("$.id").value(1L))
@@ -107,14 +119,14 @@ class AdminControllerTest {
         when(getAdminServices.getAdmin(1L))
                 .thenThrow(new AdminNotFoundException(1L));
 
-        mockMvc.perform(get("/admins/1"))
+        mockMvc.perform(get("/admins/get/1"))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     @WithMockUser
     void shouldReturn400WhenIdInvalid() throws Exception {
-        mockMvc.perform(get("/admins/abc"))
+        mockMvc.perform(get("/admins/get/abc"))
                 .andExpect(status().isBadRequest());
     }
 
@@ -130,7 +142,7 @@ class AdminControllerTest {
 
         when(getAdminServices.getAllAdmins()).thenReturn(list);
 
-        mockMvc.perform(get("/admins"))
+        mockMvc.perform(get("/admins/get_all"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith("application/json"))
                 .andExpect(jsonPath("$[0].id").value(1L))
@@ -144,7 +156,7 @@ class AdminControllerTest {
     void shouldReturnEmptyList() throws Exception {
         when(getAdminServices.getAllAdmins()).thenReturn(List.of());
 
-        mockMvc.perform(get("/admins"))
+        mockMvc.perform(get("/admins/get_all"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith("application/json"))
                 .andExpect(jsonPath("$").isEmpty());
@@ -154,14 +166,14 @@ class AdminControllerTest {
 
     @Test
     void shouldReturn401WhenNotAuthenticated() throws Exception {
-        mockMvc.perform(get("/admins"))
+        mockMvc.perform(get("/admins/get_all"))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
     @WithMockUser
     void shouldReturn403WhenCreateWithoutCsrf() throws Exception {
-        mockMvc.perform(post("/admins")
+        mockMvc.perform(post("/admins/get_all")
                         .contentType("application/json")
                         .content("{}"))
                 .andExpect(status().isForbidden());
@@ -177,7 +189,7 @@ class AdminControllerTest {
         }
         """;
 
-        mockMvc.perform(post("/admins")
+        mockMvc.perform(post("/admins/create")
                         .contentType("application/json")
                         .content(requestJson)
                         .with(csrf()))
@@ -194,7 +206,7 @@ class AdminControllerTest {
         }
         """;
 
-        mockMvc.perform(post("/admins")
+        mockMvc.perform(post("/admins/create")
                         .contentType("application/json")
                         .content(requestJson)
                         .with(csrf()))
@@ -204,7 +216,7 @@ class AdminControllerTest {
     @Test
     @WithMockUser
     void shouldReturn400WhenBodyMissing() throws Exception {
-        mockMvc.perform(post("/admins")
+        mockMvc.perform(post("/admins/create")
                         .with(csrf()))
                 .andExpect(status().isBadRequest());
     }
@@ -212,7 +224,7 @@ class AdminControllerTest {
     @Test
     @WithMockUser
     void shouldReturn415WhenWrongContentType() throws Exception {
-        mockMvc.perform(post("/admins")
+        mockMvc.perform(post("/admins/create")
                         .content("some text")
                         .with(csrf()))
                 .andExpect(status().isUnsupportedMediaType());
@@ -223,5 +235,23 @@ class AdminControllerTest {
     void shouldReturn404WhenWrongPath() throws Exception {
         mockMvc.perform(get("/adminss"))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    void shouldReturn403WhenUserIsNotAdmin() throws Exception {
+
+        String requestJson = """
+        {
+          "email": "test@mail.com",
+          "password": "Test123!"
+        }
+        """;
+
+        mockMvc.perform(post("/admins/create")
+                        .contentType("application/json")
+                        .content(requestJson)
+                        .with(csrf()))
+                .andExpect(status().isForbidden());
     }
 }
