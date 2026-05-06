@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class GetAdminServicesTest {
+class GetAdminServiceTest {
 
     @Mock
     private AdminMapper adminMapper;
@@ -28,7 +28,7 @@ class GetAdminServicesTest {
     private AdminRepository adminRepository;
 
     @InjectMocks
-    private GetAdminServices getAdminServices;
+    private GetAdminService getAdminService;
 
     @Test
     void shouldGetAdminById(){
@@ -50,7 +50,7 @@ class GetAdminServicesTest {
         when(adminMapper.mapEntityToResponseDto(admin)).thenReturn(responseDto);
 
         //when
-        AdminResponseDto result = getAdminServices.getAdmin(adminId);
+        AdminResponseDto result = getAdminService.getAdmin(adminId);
 
         //then
         assertNotNull(result);
@@ -64,7 +64,7 @@ class GetAdminServicesTest {
     void shouldThrowWhenIdIsNull(){
         //given null / when / then
         assertThrows(IllegalArgumentException.class,
-                () -> getAdminServices.getAdmin(null));
+                () -> getAdminService.getAdmin(null));
     }
 
     @Test
@@ -77,7 +77,7 @@ class GetAdminServicesTest {
 
         //when / then
         assertThrows(AdminNotFoundException.class,
-                () -> getAdminServices.getAdmin(adminId));
+                () -> getAdminService.getAdmin(adminId));
         verify(adminMapper, never()).mapEntityToResponseDto(any(Admin.class));
         verify(adminRepository).findById(adminId);
     }
@@ -112,7 +112,7 @@ class GetAdminServicesTest {
         when(adminMapper.mapEntityToResponseDto(admins.getLast())).thenReturn(responseDtos.getLast());
 
         //when
-        List<AdminResponseDto> result = getAdminServices.getAllAdmins();
+        List<AdminResponseDto> result = getAdminService.getAllAdmins();
 
         //then
         assertNotNull(result);
@@ -132,7 +132,7 @@ class GetAdminServicesTest {
         when(adminRepository.findAll()).thenReturn(List.of());
 
         //when
-        List<AdminResponseDto> result = getAdminServices.getAllAdmins();
+        List<AdminResponseDto> result = getAdminService.getAllAdmins();
 
         //then
         assertNotNull(result);

@@ -5,7 +5,7 @@ import com.matryoshkaja.demo.Exceptions.AdminNotFoundException;
 import com.matryoshkaja.demo.Security.CustomUserDetailsService;
 import com.matryoshkaja.demo.Security.JwtService;
 import com.matryoshkaja.demo.Services.AdminServices.CreateAdminService;
-import com.matryoshkaja.demo.Services.AdminServices.GetAdminServices;
+import com.matryoshkaja.demo.Services.AdminServices.GetAdminService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -37,7 +37,7 @@ class AdminControllerTest {
     @MockitoBean
     private CreateAdminService createAdminService;
     @MockitoBean
-    private GetAdminServices getAdminServices;
+    private GetAdminService getAdminService;
 
     @TestConfiguration
     @EnableMethodSecurity
@@ -102,7 +102,7 @@ class AdminControllerTest {
     void shouldGetAdmin() throws Exception {
         AdminResponseDto dto = new AdminResponseDto(1L, "test@mail.com");
 
-        when(getAdminServices.getAdmin(1L)).thenReturn(dto);
+        when(getAdminService.getAdmin(1L)).thenReturn(dto);
 
         mockMvc.perform(get("/admins/get/1"))
                 .andExpect(status().isOk())
@@ -110,13 +110,13 @@ class AdminControllerTest {
                 .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.email").value("test@mail.com"))
                 .andExpect(jsonPath("$.email").exists());
-        verify(getAdminServices).getAdmin(1L);
+        verify(getAdminService).getAdmin(1L);
     }
 
     @Test
     @WithMockUser
     void shouldReturn404WhenAdminNotFound() throws Exception {
-        when(getAdminServices.getAdmin(1L))
+        when(getAdminService.getAdmin(1L))
                 .thenThrow(new AdminNotFoundException(1L));
 
         mockMvc.perform(get("/admins/get/1"))
@@ -140,7 +140,7 @@ class AdminControllerTest {
                 new AdminResponseDto(2L, "b@mail.com")
         );
 
-        when(getAdminServices.getAllAdmins()).thenReturn(list);
+        when(getAdminService.getAllAdmins()).thenReturn(list);
 
         mockMvc.perform(get("/admins/get_all"))
                 .andExpect(status().isOk())
@@ -154,7 +154,7 @@ class AdminControllerTest {
     @Test
     @WithMockUser
     void shouldReturnEmptyList() throws Exception {
-        when(getAdminServices.getAllAdmins()).thenReturn(List.of());
+        when(getAdminService.getAllAdmins()).thenReturn(List.of());
 
         mockMvc.perform(get("/admins/get_all"))
                 .andExpect(status().isOk())

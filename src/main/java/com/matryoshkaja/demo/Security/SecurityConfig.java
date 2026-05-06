@@ -36,6 +36,7 @@ public class SecurityConfig {
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/admins/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/photos", "/photos/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/page-content").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session ->

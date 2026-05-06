@@ -3,7 +3,7 @@ package com.matryoshkaja.demo.Controllers;
 import com.matryoshkaja.demo.Dtos.AdminDtos.AdminCreateDto;
 import com.matryoshkaja.demo.Dtos.AdminDtos.AdminResponseDto;
 import com.matryoshkaja.demo.Services.AdminServices.CreateAdminService;
-import com.matryoshkaja.demo.Services.AdminServices.GetAdminServices;
+import com.matryoshkaja.demo.Services.AdminServices.GetAdminService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,7 +17,7 @@ import java.util.List;
 public class AdminController {
 
     private final CreateAdminService createAdminService;
-    private final GetAdminServices getAdminServices;
+    private final GetAdminService getAdminService;
 
     @PostMapping("/create")
     @PreAuthorize("hasRole('ADMIN')")
@@ -27,11 +27,11 @@ public class AdminController {
 
     @GetMapping("/get/{adminId}")
     public AdminResponseDto get(@PathVariable Long adminId){
-        return getAdminServices.getAdmin(adminId);
+        return getAdminService.getAdmin(adminId);
     }
 
     @GetMapping("/get_all")
     public List<AdminResponseDto> getAll(){
-        return getAdminServices.getAllAdmins();
+        return getAdminService.getAllAdmins();
     }
 }
