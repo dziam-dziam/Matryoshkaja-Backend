@@ -31,7 +31,7 @@ public class Photo {
     private String caption;
 
     // REORDER CHANGE: position used to sort photos in the public lookbook.
-    @Column(name = "display_order", nullable = false)
+    @Column(name = "display_order")
     private Integer displayOrder;
 
     @Override
