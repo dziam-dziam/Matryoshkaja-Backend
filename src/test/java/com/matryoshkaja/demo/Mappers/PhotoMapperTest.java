@@ -1,6 +1,6 @@
 package com.matryoshkaja.demo.Mappers;
 
-import com.matryoshkaja.demo.Dtos.PhotoResponseDto;
+import com.matryoshkaja.demo.Dtos.PhotoDtos.PhotoResponseDto;
 import com.matryoshkaja.demo.Entities.Photo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

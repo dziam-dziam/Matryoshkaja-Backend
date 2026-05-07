@@ -1,8 +1,8 @@
 package com.matryoshkaja.demo.Controllers;
 
-import com.matryoshkaja.demo.Dtos.PhotoCaptionUpdateDto;
-import com.matryoshkaja.demo.Dtos.PhotoOrderUpdateDto;
-import com.matryoshkaja.demo.Dtos.PhotoResponseDto;
+import com.matryoshkaja.demo.Dtos.PhotoDtos.PhotoCaptionUpdateDto;
+import com.matryoshkaja.demo.Dtos.PhotoDtos.PhotoOrderUpdateDto;
+import com.matryoshkaja.demo.Dtos.PhotoDtos.PhotoResponseDto;
 import com.matryoshkaja.demo.Services.PhotoServices.DeletePhotoService;
 import com.matryoshkaja.demo.Services.PhotoServices.GetPhotoService;
 import com.matryoshkaja.demo.Services.PhotoServices.UpdatePhotoCaptionService;

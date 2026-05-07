@@ -1,7 +1,7 @@
 package com.matryoshkaja.demo.Services.PhotoServices;
 
-import com.matryoshkaja.demo.Dtos.PhotoCaptionUpdateDto;
-import com.matryoshkaja.demo.Dtos.PhotoResponseDto;
+import com.matryoshkaja.demo.Dtos.PhotoDtos.PhotoCaptionUpdateDto;
+import com.matryoshkaja.demo.Dtos.PhotoDtos.PhotoResponseDto;
 import com.matryoshkaja.demo.Entities.Photo;
 import com.matryoshkaja.demo.Exceptions.PhotoNotFoundException;
 import com.matryoshkaja.demo.Mappers.PhotoMapper;

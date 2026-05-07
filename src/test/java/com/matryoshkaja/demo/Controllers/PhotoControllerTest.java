@@ -1,7 +1,7 @@
 package com.matryoshkaja.demo.Controllers;
 
-import com.matryoshkaja.demo.Dtos.PhotoCaptionUpdateDto;
-import com.matryoshkaja.demo.Dtos.PhotoResponseDto;
+import com.matryoshkaja.demo.Dtos.PhotoDtos.PhotoCaptionUpdateDto;
+import com.matryoshkaja.demo.Dtos.PhotoDtos.PhotoResponseDto;
 import com.matryoshkaja.demo.Exceptions.PhotoNotFoundException;
 import com.matryoshkaja.demo.Security.CustomUserDetailsService;
 import com.matryoshkaja.demo.Security.JwtService;

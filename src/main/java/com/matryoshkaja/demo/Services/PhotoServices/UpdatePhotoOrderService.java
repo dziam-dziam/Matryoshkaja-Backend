@@ -1,7 +1,7 @@
 package com.matryoshkaja.demo.Services.PhotoServices;
 
-import com.matryoshkaja.demo.Dtos.PhotoOrderUpdateDto;
-import com.matryoshkaja.demo.Dtos.PhotoResponseDto;
+import com.matryoshkaja.demo.Dtos.PhotoDtos.PhotoOrderUpdateDto;
+import com.matryoshkaja.demo.Dtos.PhotoDtos.PhotoResponseDto;
 import com.matryoshkaja.demo.Entities.Photo;
 import com.matryoshkaja.demo.Mappers.PhotoMapper;
 import com.matryoshkaja.demo.Repositories.PhotoRepository;
