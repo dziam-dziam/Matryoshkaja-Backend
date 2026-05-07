@@ -16,7 +16,8 @@ public class PhotoMapper {
         return PhotoResponseDto.builder()
                 .id(entity.getId())
                 .imageUrl(entity.getImageUrl())
-                // REORDER CHANGE
+                // CAPTION CHANGE: pass editable caption to frontend.
+                .caption(entity.getCaption())
                 .displayOrder(entity.getDisplayOrder())
                 .build();
     }
@@ -26,7 +27,8 @@ public class PhotoMapper {
         return Photo.builder()
                 .id(dto.getId())
                 .imageUrl(dto.getImageUrl())
-                // REORDER CHANGE
+                // CAPTION CHANGE: keep caption when mapping back to entity.
+                .caption(dto.getCaption())
                 .displayOrder(dto.getDisplayOrder())
                 .build();
     }

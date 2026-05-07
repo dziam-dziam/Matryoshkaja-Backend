@@ -26,6 +26,10 @@ public class Photo {
     @NotBlank
     private String imageKey;
 
+    // CAPTION CHANGE: editable photo caption shown under the photo in lookbook.
+    @Column(name = "caption")
+    private String caption;
+
     // REORDER CHANGE: position used to sort photos in the public lookbook.
     @Column(name = "display_order", nullable = false)
     private Integer displayOrder;

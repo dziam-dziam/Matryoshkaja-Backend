@@ -1,9 +1,11 @@
 package com.matryoshkaja.demo.Controllers;
 
+import com.matryoshkaja.demo.Dtos.PhotoCaptionUpdateDto;
 import com.matryoshkaja.demo.Dtos.PhotoOrderUpdateDto;
 import com.matryoshkaja.demo.Dtos.PhotoResponseDto;
 import com.matryoshkaja.demo.Services.PhotoServices.DeletePhotoService;
 import com.matryoshkaja.demo.Services.PhotoServices.GetPhotoService;
+import com.matryoshkaja.demo.Services.PhotoServices.UpdatePhotoCaptionService;
 import com.matryoshkaja.demo.Services.PhotoServices.UpdatePhotoOrderService;
 import com.matryoshkaja.demo.Services.PhotoServices.UploadPhotoService;
 import lombok.RequiredArgsConstructor;
@@ -20,10 +22,15 @@ public class PhotoController {
     private final DeletePhotoService deletePhotoService;
     private final GetPhotoService getPhotoService;
     private final UpdatePhotoOrderService updatePhotoOrderService;
+    private final UpdatePhotoCaptionService updatePhotoCaptionService;
 
     @PostMapping
-    public PhotoResponseDto upload(@RequestParam("file") MultipartFile multipartFile){
-        return uploadPhotoService.uploadPhoto(multipartFile);
+    public PhotoResponseDto upload(
+            @RequestParam("file") MultipartFile multipartFile,
+            // CAPTION CHANGE: optional caption sent together with the uploaded file.
+            @RequestParam(value = "caption", required = false) String caption
+    ){
+        return uploadPhotoService.uploadPhoto(multipartFile, caption);
     }
 
     @GetMapping("/{photoId}")
@@ -41,9 +48,16 @@ public class PhotoController {
         deletePhotoService.deletePhoto(photoId);
     }
 
-    // REORDER CHANGE: saves the full lookbook photo order.
     @PutMapping("/order")
     public List<PhotoResponseDto> updateOrder(@RequestBody PhotoOrderUpdateDto request) {
         return updatePhotoOrderService.updateOrder(request);
+    }
+
+    @PatchMapping("/{photoId}/caption")
+    public PhotoResponseDto updateCaption(
+            @PathVariable Long photoId,
+            @RequestBody PhotoCaptionUpdateDto request
+    ) {
+        return updatePhotoCaptionService.updateCaption(photoId, request);
     }
 }
