@@ -38,11 +38,15 @@ class GetPhotoServiceTest {
                 .id(photoId)
                 .imageUrl("url")
                 .imageKey("key")
+                .caption("caption")
+                .displayOrder(1)
                 .build();
 
         PhotoResponseDto responseDto = PhotoResponseDto.builder()
                 .id(photoId)
                 .imageUrl("url")
+                .caption("caption")
+                .displayOrder(1)
                 .build();
 
         when(photoRepository.findById(photoId)).thenReturn(Optional.of(photo));
@@ -55,6 +59,8 @@ class GetPhotoServiceTest {
         assertNotNull(result);
         assertEquals(photoId, result.getId());
         assertEquals("url", result.getImageUrl());
+        assertEquals("caption", result.getCaption());
+        assertEquals(1, result.getDisplayOrder());
 
         verify(photoRepository).findById(photoId);
         verify(photoMapper).mapEntityToResponseDto(photo);
@@ -88,16 +94,38 @@ class GetPhotoServiceTest {
     void shouldGetAllPhotos() {
         // given
         List<Photo> photos = List.of(
-                Photo.builder().id(1L).imageUrl("url1").imageKey("key1").build(),
-                Photo.builder().id(2L).imageUrl("url2").imageKey("key2").build()
+                Photo.builder()
+                        .id(1L)
+                        .imageUrl("url1")
+                        .imageKey("key1")
+                        .caption("caption 1")
+                        .displayOrder(1)
+                        .build(),
+                Photo.builder()
+                        .id(2L)
+                        .imageUrl("url2")
+                        .imageKey("key2")
+                        .caption("caption 2")
+                        .displayOrder(2)
+                        .build()
         );
 
         List<PhotoResponseDto> responseDtos = List.of(
-                PhotoResponseDto.builder().id(1L).imageUrl("url1").build(),
-                PhotoResponseDto.builder().id(2L).imageUrl("url2").build()
+                PhotoResponseDto.builder()
+                        .id(1L)
+                        .imageUrl("url1")
+                        .caption("caption 1")
+                        .displayOrder(1)
+                        .build(),
+                PhotoResponseDto.builder()
+                        .id(2L)
+                        .imageUrl("url2")
+                        .caption("caption 2")
+                        .displayOrder(2)
+                        .build()
         );
 
-        when(photoRepository.findAll()).thenReturn(photos);
+        when(photoRepository.findAllByOrderByDisplayOrderAscIdAsc()).thenReturn(photos);
         when(photoMapper.mapEntityToResponseDto(photos.get(0))).thenReturn(responseDtos.get(0));
         when(photoMapper.mapEntityToResponseDto(photos.get(1))).thenReturn(responseDtos.get(1));
 
@@ -107,12 +135,19 @@ class GetPhotoServiceTest {
         // then
         assertNotNull(result);
         assertEquals(2, result.size());
+
         assertEquals(1L, result.getFirst().getId());
         assertEquals("url1", result.getFirst().getImageUrl());
+        assertEquals("caption 1", result.getFirst().getCaption());
+        assertEquals(1, result.getFirst().getDisplayOrder());
+
         assertEquals(2L, result.get(1).getId());
         assertEquals("url2", result.get(1).getImageUrl());
+        assertEquals("caption 2", result.get(1).getCaption());
+        assertEquals(2, result.get(1).getDisplayOrder());
 
-        verify(photoRepository).findAll();
+        verify(photoRepository).findAllByOrderByDisplayOrderAscIdAsc();
+        verify(photoRepository, never()).findAll();
         verify(photoMapper).mapEntityToResponseDto(photos.get(0));
         verify(photoMapper).mapEntityToResponseDto(photos.get(1));
     }
@@ -120,7 +155,7 @@ class GetPhotoServiceTest {
     @Test
     void shouldReturnEmptyWhenNoPhotosExist() {
         // given
-        when(photoRepository.findAll()).thenReturn(List.of());
+        when(photoRepository.findAllByOrderByDisplayOrderAscIdAsc()).thenReturn(List.of());
 
         // when
         List<PhotoResponseDto> result = getPhotoService.getAllPhotos();
@@ -129,7 +164,8 @@ class GetPhotoServiceTest {
         assertNotNull(result);
         assertTrue(result.isEmpty());
 
-        verify(photoRepository).findAll();
+        verify(photoRepository).findAllByOrderByDisplayOrderAscIdAsc();
+        verify(photoRepository, never()).findAll();
         verify(photoMapper, never()).mapEntityToResponseDto(any(Photo.class));
     }
 }
