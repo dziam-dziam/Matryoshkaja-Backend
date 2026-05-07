@@ -26,6 +26,10 @@ public class Photo {
     @NotBlank
     private String imageKey;
 
+    // REORDER CHANGE: position used to sort photos in the public lookbook.
+    @Column(name = "display_order", nullable = false)
+    private Integer displayOrder;
+
     @Override
     public final boolean equals(Object object){
         if(this == object) return true;
@@ -41,5 +45,4 @@ public class Photo {
     public final int hashCode(){
         return Hibernate.getClass(this).hashCode();
     }
-
 }

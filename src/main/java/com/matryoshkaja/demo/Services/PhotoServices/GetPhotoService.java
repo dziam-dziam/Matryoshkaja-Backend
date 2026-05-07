@@ -23,14 +23,14 @@ public class GetPhotoService {
         }
 
         Photo photo = photoRepository.findById(photoId)
-                    .orElseThrow(() -> new PhotoNotFoundException(photoId));
+                .orElseThrow(() -> new PhotoNotFoundException(photoId));
 
         return photoMapper.mapEntityToResponseDto(photo);
     }
 
-
     public List<PhotoResponseDto> getAllPhotos(){
-        return photoRepository.findAll()
+        // REORDER CHANGE: photos are always returned in the saved lookbook order.
+        return photoRepository.findAllByOrderByDisplayOrderAscIdAsc()
                 .stream()
                 .map(photoMapper::mapEntityToResponseDto)
                 .toList();

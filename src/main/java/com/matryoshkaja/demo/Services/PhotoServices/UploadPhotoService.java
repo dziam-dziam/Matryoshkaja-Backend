@@ -21,13 +21,20 @@ public class UploadPhotoService {
         if (file == null || file.isEmpty()){
             throw new IllegalArgumentException("File input cannot be null or empty");
         }
-        String key = storageService.generateKey(file.getOriginalFilename());
 
+        String key = storageService.generateKey(file.getOriginalFilename());
         String url = storageService.upload(file, key);
+
+        // REORDER CHANGE: new photo goes to the end of the current list.
+        int nextDisplayOrder = photoRepository.findTopByOrderByDisplayOrderDesc()
+                .map(Photo::getDisplayOrder)
+                .map(order -> order + 1)
+                .orElse(1);
 
         Photo newPhoto = Photo.builder()
                 .imageUrl(url)
                 .imageKey(key)
+                .displayOrder(nextDisplayOrder)
                 .build();
 
         Photo saved = photoRepository.save(newPhoto);

@@ -16,6 +16,8 @@ public class PhotoMapper {
         return PhotoResponseDto.builder()
                 .id(entity.getId())
                 .imageUrl(entity.getImageUrl())
+                // REORDER CHANGE
+                .displayOrder(entity.getDisplayOrder())
                 .build();
     }
 
@@ -24,6 +26,8 @@ public class PhotoMapper {
         return Photo.builder()
                 .id(dto.getId())
                 .imageUrl(dto.getImageUrl())
+                // REORDER CHANGE
+                .displayOrder(dto.getDisplayOrder())
                 .build();
     }
 }
