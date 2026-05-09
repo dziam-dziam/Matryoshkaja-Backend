@@ -5,6 +5,8 @@ import com.matryoshkaja.demo.Enums.Role;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import io.jsonwebtoken.ExpiredJwtException;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -37,6 +39,11 @@ class JwtAuthenticationFilterTest {
     @InjectMocks
     private JwtAuthenticationFilter filter;
 
+    @AfterEach
+    void clearSecurityContext() {
+        SecurityContextHolder.clearContext();
+    }
+
     @Test
     void shouldSkipWhenNoHeader() throws Exception {
         when(request.getHeader("Authorization")).thenReturn(null);
@@ -53,6 +60,20 @@ class JwtAuthenticationFilterTest {
         filter.doFilterInternal(request, response, filterChain);
 
         verify(filterChain).doFilter(request, response);
+    }
+
+    @Test
+    void shouldSkipWhenBearerTokenIsExpired() throws Exception {
+        String token = "token";
+
+        when(request.getHeader("Authorization")).thenReturn("Bearer " + token);
+        when(jwtService.extractUsername(token)).thenThrow(mock(ExpiredJwtException.class));
+
+        filter.doFilterInternal(request, response, filterChain);
+
+        assertNull(SecurityContextHolder.getContext().getAuthentication());
+        verify(filterChain).doFilter(request, response);
+        verifyNoInteractions(userDetailsService);
     }
 
     @Test
