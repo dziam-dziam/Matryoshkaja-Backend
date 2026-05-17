@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.hibernate.Hibernate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Builder
@@ -26,13 +28,17 @@ public class Photo {
     @NotBlank
     private String imageKey;
 
-    // CAPTION CHANGE: editable photo caption shown under the photo in lookbook.
     @Column(name = "caption")
     private String caption;
 
-    // REORDER CHANGE: position used to sort photos in the public lookbook.
     @Column(name = "display_order")
     private Integer displayOrder;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "photo_carousel_images", joinColumns = @JoinColumn(name = "photo_id"))
+    @OrderBy("displayOrder ASC")
+    @Builder.Default
+    private List<PhotoCarouselImage> carouselImages = new ArrayList<>();
 
     @Override
     public final boolean equals(Object object){

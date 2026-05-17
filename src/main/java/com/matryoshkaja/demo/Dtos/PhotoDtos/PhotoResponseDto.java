@@ -1,6 +1,8 @@
 package com.matryoshkaja.demo.Dtos.PhotoDtos;
 
+import com.matryoshkaja.demo.Dtos.PhotoCarouselImageDto;
 import lombok.*;
+import java.util.List;
 
 @Data
 @Builder
@@ -11,9 +13,9 @@ public class PhotoResponseDto {
 
     private String imageUrl;
 
-    // CAPTION CHANGE: frontend displays and edits this text under the photo.
     private String caption;
 
-    // REORDER CHANGE: frontend uses this to keep the current photo order.
     private Integer displayOrder;
+
+    private List<PhotoCarouselImageDto> carouselImages;
 }

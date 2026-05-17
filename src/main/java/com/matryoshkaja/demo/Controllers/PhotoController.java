@@ -8,6 +8,7 @@ import com.matryoshkaja.demo.Services.PhotoServices.GetPhotoService;
 import com.matryoshkaja.demo.Services.PhotoServices.UpdatePhotoCaptionService;
 import com.matryoshkaja.demo.Services.PhotoServices.UpdatePhotoOrderService;
 import com.matryoshkaja.demo.Services.PhotoServices.UploadPhotoService;
+import com.matryoshkaja.demo.Services.UploadCarouselPhotoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,6 +24,7 @@ public class PhotoController {
     private final GetPhotoService getPhotoService;
     private final UpdatePhotoOrderService updatePhotoOrderService;
     private final UpdatePhotoCaptionService updatePhotoCaptionService;
+    private final UploadCarouselPhotoService uploadCarouselPhotoService;
 
     @PostMapping
     public PhotoResponseDto upload(
@@ -59,5 +61,13 @@ public class PhotoController {
             @RequestBody PhotoCaptionUpdateDto request
     ) {
         return updatePhotoCaptionService.updateCaption(photoId, request);
+    }
+
+    @PostMapping("/{photoId}/carousel")
+    public PhotoResponseDto uploadCarouselPhoto(
+            @PathVariable Long photoId,
+            @RequestParam("file") MultipartFile multipartFile
+    ) {
+        return uploadCarouselPhotoService.uploadCarouselPhoto(photoId, multipartFile);
     }
 }
