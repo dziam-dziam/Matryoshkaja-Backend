@@ -12,6 +12,7 @@ import com.matryoshkaja.demo.Services.UploadCarouselPhotoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import com.matryoshkaja.demo.Services.PhotoServices.DeleteCarouselPhotoService;
 
 import java.util.List;
 
@@ -25,6 +26,7 @@ public class PhotoController {
     private final UpdatePhotoOrderService updatePhotoOrderService;
     private final UpdatePhotoCaptionService updatePhotoCaptionService;
     private final UploadCarouselPhotoService uploadCarouselPhotoService;
+    private final DeleteCarouselPhotoService deleteCarouselPhotoService;
 
     @PostMapping
     public PhotoResponseDto upload(
@@ -58,16 +60,20 @@ public class PhotoController {
     @PatchMapping("/{photoId}/caption")
     public PhotoResponseDto updateCaption(
             @PathVariable Long photoId,
-            @RequestBody PhotoCaptionUpdateDto request
-    ) {
+            @RequestBody PhotoCaptionUpdateDto request) {
         return updatePhotoCaptionService.updateCaption(photoId, request);
     }
 
     @PostMapping("/{photoId}/carousel")
     public PhotoResponseDto uploadCarouselPhoto(
             @PathVariable Long photoId,
-            @RequestParam("file") MultipartFile multipartFile
-    ) {
+            @RequestParam("file") MultipartFile multipartFile) {
         return uploadCarouselPhotoService.uploadCarouselPhoto(photoId, multipartFile);
+    }
+    @DeleteMapping("/{photoId}/carousel/{displayOrder}")
+    public PhotoResponseDto deleteCarouselPhoto(
+            @PathVariable Long photoId,
+            @PathVariable Integer displayOrder) {
+        return deleteCarouselPhotoService.deleteCarouselPhoto(photoId, displayOrder);
     }
 }
