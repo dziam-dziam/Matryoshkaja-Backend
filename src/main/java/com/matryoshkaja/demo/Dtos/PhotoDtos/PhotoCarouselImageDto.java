@@ -1,4 +1,4 @@
-package com.matryoshkaja.demo.Dtos;
+package com.matryoshkaja.demo.Dtos.PhotoDtos;
 
 import lombok.*;
 

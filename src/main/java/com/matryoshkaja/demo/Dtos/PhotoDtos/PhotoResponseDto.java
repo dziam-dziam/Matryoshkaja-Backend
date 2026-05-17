@@ -1,6 +1,5 @@
 package com.matryoshkaja.demo.Dtos.PhotoDtos;
 
-import com.matryoshkaja.demo.Dtos.PhotoCarouselImageDto;
 import lombok.*;
 import java.util.List;
 
